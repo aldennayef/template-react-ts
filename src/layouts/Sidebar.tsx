@@ -10,7 +10,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentPath }) => {
   const menus = [
-    { name: 'Beranda', path: '/', icon: <LayoutDashboard size={20} /> },
+    { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
     { name: 'Maritime', path: '/maritime', icon: <Waves size={20} /> },
     { name: 'Weather', path: '/weather', icon: <CloudSun size={20} /> },
     { name: 'Settings', path: '/settings', icon: <Settings size={20} /> },
@@ -29,7 +29,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentPath }) => 
             {/* File Logo Gambar */}
             <img 
               src="/kodaeral_3.png" // Pastikan file ada di folder /public
-              alt="Kodaeral3 Logo"
+              alt="Maritime.ID Logo"
               className="h-9 w-auto object-contain" // Tinggi 2.25rem (36px), lebar otomatis
             />
             
@@ -54,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentPath }) => 
                 to={menu.path}
                 className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group whitespace-nowrap ${
                   isActive
-                    ? 'bg-[#F3F4F4] text-[#5b9ef0] shadow-md'
+                    ? 'bg-[#111e3d] text-[#5b9ef0] shadow-md'
                     : 'text-gray-600 hover:bg-gray-100 hover:text-[#111e3d]'
                 }`}
               >
