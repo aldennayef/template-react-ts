@@ -1,66 +1,76 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Gunakan Link agar tidak refresh
-import { LayoutDashboard, Waves, CloudSun, Settings, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { LayoutDashboard, Waves, CloudSun } from 'lucide-react';
+import { useSidebarStore } from '@/store/useSidebarStore';
+import { cn } from '@/utils/cn';
 
-interface SidebarProps {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  currentPath: string;
-}
+export default function Sidebar() {
+  const { isOpen } = useSidebarStore();
+  const location = useLocation();
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentPath }) => {
   const menus = [
-    { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
-    { name: 'Page1', path: '/page1', icon: <Waves size={20} /> },
-    { name: 'Page2', path: '/page2', icon: <CloudSun size={20} /> },
+    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
+    { name: 'Page 1', path: '/page1', icon: Waves },
+    { name: 'Page 2', path: '/page2', icon: CloudSun },
   ];
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200 transform transition-all duration-300 ease-in-out 
-        ${isOpen ? 'translate-x-0 w-64 opacity-100' : '-translate-x-full lg:translate-x-0 lg:w-0 lg:opacity-0 overflow-hidden'}
-        lg:relative`}
+      className={cn(
+        'fixed inset-y-0 left-0 z-40 bg-white border-r border-gray-200 transform transition-all duration-300 ease-in-out lg:relative',
+        isOpen
+          ? 'translate-x-0 w-64 opacity-100'
+          : '-translate-x-full lg:translate-x-0 lg:w-0 lg:opacity-0 overflow-hidden'
+      )}
     >
-      {/* Wrapper ini menjaga konten tetap lebar 64 (16rem) meskipun aside mengecil */}
       <div className="flex flex-col h-full w-64">
+        {/* Brand Header */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
           <Link to="/" className="flex items-center space-x-3">
-            {/* File Logo Gambar */}
-            <img 
-              src="/aldendev-favicon.png" // Pastikan file ada di folder /public
-              alt="AldenDev Logo"
-              className="h-9 w-auto object-contain" // Tinggi 2.25rem (36px), lebar otomatis
+            <img
+              src="/favicon.svg"
+              alt="Logo"
+              className="h-8 w-8 object-contain"
+              onError={(e) => {
+                // Fallback jika icon belum ada
+                e.currentTarget.style.display = 'none';
+              }}
             />
-            
-            {/* Teks Brand (Sembunyikan teks jika logo gambar sudah berisi teks) */}
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-[#111e3d] whitespace-nowrap leading-none">
+              <span className="text-lg font-bold text-[#111e3d] whitespace-nowrap leading-none">
                 Alden's Dev
               </span>
-              <span className="text-[1vh] font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap mt-0.5">
-                Developer
+              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider whitespace-nowrap mt-0.5">
+                Template React TS
               </span>
             </div>
           </Link>
         </div>
 
+        {/* Navigation Menus */}
         <nav className="mt-6 px-3 space-y-1">
           {menus.map((menu) => {
-            const isActive = currentPath === menu.path;
+            const isActive = location.pathname === menu.path;
+            const Icon = menu.icon;
+
             return (
               <Link
                 key={menu.path}
                 to={menu.path}
-                className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group whitespace-nowrap ${
+                className={cn(
+                  'flex items-center px-4 py-2.5 rounded-lg text-sm font-medium transition-colors group whitespace-nowrap',
                   isActive
-                    ? 'bg-[#E2E3E4] text-gray-800 shadow-md'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-[#111e3d]'
-                }`}
+                    ? 'bg-blue-50 text-blue-700 font-semibold'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                )}
               >
-                <span className={`transition-colors duration-200 ${isActive ? 'text-gray-800' : 'text-gray-400 group-hover:text-[#111e3d]'}`}>
-                  {menu.icon}
-                </span>
-                <span className="ml-3 font-medium">{menu.name}</span>
+                <Icon
+                  size={18}
+                  className={cn(
+                    'mr-3 transition-colors',
+                    isActive ? 'text-blue-700' : 'text-gray-400 group-hover:text-gray-600'
+                  )}
+                />
+                <span>{menu.name}</span>
               </Link>
             );
           })}
@@ -68,6 +78,4 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen, currentPath }) => 
       </div>
     </aside>
   );
-};
-
-export default Sidebar;
+}
